@@ -4,6 +4,7 @@ from __future__ import annotations
 import asyncio
 from collections.abc import AsyncIterator
 from typing import Any
+from urllib.parse import urlsplit
 
 import aiohttp
 
@@ -18,10 +19,16 @@ class KomoraAuthError(KomoraError):
     """Токен недійсний або відкликаний."""
 
 
+def base_url(url: str) -> str:
+    """Лише схема і хост: «https://komora.example.com/item/5» → «https://komora.example.com»."""
+    parts = urlsplit(url.strip())
+    return f"{parts.scheme}://{parts.netloc}"
+
+
 class KomoraApi:
     def __init__(self, session: aiohttp.ClientSession, url: str, token: str) -> None:
         self._session = session
-        self.url = url.rstrip("/")
+        self.url = base_url(url)
         self._headers = {"X-Api-Key": token, "Accept": "application/json"}
 
     async def request(
@@ -47,7 +54,10 @@ class KomoraApi:
                 try:
                     body = json_loads(text) if text.strip() else None
                 except ValueError:
-                    body = None
+                    # сторінка замість JSON: не та адреса або щось між HA і Комором
+                    raise KomoraError(
+                        f"відповідь не від API Комори (HTTP {r.status}, {r.content_type}) — перевір адресу"
+                    ) from None
                 if r.status >= 400:
                     msg = body.get("error") if isinstance(body, dict) else None
                     raise KomoraError(msg or text.strip()[:200] or f"HTTP {r.status}")
@@ -57,7 +67,10 @@ class KomoraApi:
 
     # --- читання
     async def health(self) -> dict:
-        return await self.request("GET", "/health")
+        h = await self.request("GET", "/health")
+        if not isinstance(h, dict) or h.get("status") != "ok":
+            raise KomoraError("за цією адресою не Комора")
+        return h
 
     async def features(self) -> dict:
         return await self.request("GET", "/features")

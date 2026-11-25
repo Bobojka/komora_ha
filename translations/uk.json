@@ -9,7 +9,7 @@
           "token": "Токен API"
         },
         "data_description": {
-          "url": "https://komora.example.com"
+          "url": "Лише адреса сайту, напр. https://komora.example.com"
         }
       },
       "reauth_confirm": {
@@ -17,6 +17,16 @@
         "description": "Токен для {url} більше не діє. Створи новий у Коморі.",
         "data": {
           "token": "Токен API"
+        }
+      },
+      "reconfigure": {
+        "title": "Змінити адресу чи токен",
+        "data": {
+          "url": "Адреса",
+          "token": "Токен API"
+        },
+        "data_description": {
+          "url": "Лише адреса сайту, напр. https://komora.example.com"
         }
       }
     },
@@ -27,7 +37,9 @@
     },
     "abort": {
       "already_configured": "Ця Комора вже підключена.",
-      "reauth_successful": "Токен оновлено."
+      "reauth_successful": "Токен оновлено.",
+      "reconfigure_successful": "Збережено.",
+      "another_komora": "Це інша Комора — додай її окремою інтеграцією."
     }
   },
   "options": {

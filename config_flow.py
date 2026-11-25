@@ -19,7 +19,7 @@ from homeassistant.helpers.selector import (
     TextSelectorType,
 )
 
-from .api import KomoraApi, KomoraAuthError, KomoraError
+from .api import KomoraApi, KomoraAuthError, KomoraError, base_url
 from .const import (
     CONF_HORIZON,
     CONF_PANEL,
@@ -37,7 +37,8 @@ TOKEN = TextSelector(TextSelectorConfig(type=TextSelectorType.PASSWORD))
 async def _check(hass, url: str, token: str) -> dict[str, str]:
     api = KomoraApi(async_get_clientsession(hass), url, token)
     try:
-        await api.features()  # потребує токена — перевіряє і адресу, і доступ
+        await api.health()  # чи це взагалі Комора
+        await api.features()  # потребує токена
     except KomoraAuthError:
         return {"base": "invalid_auth"}
     except KomoraError:
@@ -51,8 +52,8 @@ class KomoraConfigFlow(ConfigFlow, domain=DOMAIN):
     async def async_step_user(self, user_input: dict[str, Any] | None = None) -> ConfigFlowResult:
         errors: dict[str, str] = {}
         if user_input is not None:
-            url = user_input[CONF_URL].strip().rstrip("/")
-            if not url.startswith(("http://", "https://")):
+            url = base_url(user_input[CONF_URL])
+            if not url.startswith(("http://", "https://")) or url.endswith("://"):
                 errors[CONF_URL] = "bad_url"
             else:
                 await self.async_set_unique_id(url.lower())
@@ -72,6 +73,34 @@ class KomoraConfigFlow(ConfigFlow, domain=DOMAIN):
         return self.async_show_form(
             step_id="user",
             data_schema=self.add_suggested_values_to_schema(schema, user_input or {}),
+            errors=errors,
+        )
+
+    async def async_step_reconfigure(self, user_input: dict[str, Any] | None = None) -> ConfigFlowResult:
+        entry = self._get_reconfigure_entry()
+        errors: dict[str, str] = {}
+        if user_input is not None:
+            url = base_url(user_input[CONF_URL])
+            token = user_input[CONF_TOKEN].strip()
+            if not url.startswith(("http://", "https://")) or url.endswith("://"):
+                errors[CONF_URL] = "bad_url"
+            else:
+                errors = await _check(self.hass, url, token)
+                if not errors:
+                    await self.async_set_unique_id(url.lower())
+                    self._abort_if_unique_id_mismatch(reason="another_komora")
+                    return self.async_update_reload_and_abort(
+                        entry, unique_id=url.lower(), data={CONF_URL: url, CONF_TOKEN: token}
+                    )
+        schema = vol.Schema(
+            {
+                vol.Required(CONF_URL): TextSelector(TextSelectorConfig(type=TextSelectorType.URL)),
+                vol.Required(CONF_TOKEN): TOKEN,
+            }
+        )
+        return self.async_show_form(
+            step_id="reconfigure",
+            data_schema=self.add_suggested_values_to_schema(schema, user_input or {CONF_URL: entry.data[CONF_URL]}),
             errors=errors,
         )
 

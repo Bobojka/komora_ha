@@ -9,7 +9,7 @@
           "token": "API token"
         },
         "data_description": {
-          "url": "https://komora.example.com"
+          "url": "Site address only, e.g. https://komora.example.com"
         }
       },
       "reauth_confirm": {
@@ -17,6 +17,16 @@
         "description": "The token for {url} no longer works. Create a new one in Komora.",
         "data": {
           "token": "API token"
+        }
+      },
+      "reconfigure": {
+        "title": "Change URL or token",
+        "data": {
+          "url": "URL",
+          "token": "API token"
+        },
+        "data_description": {
+          "url": "Site address only, e.g. https://komora.example.com"
         }
       }
     },
@@ -27,7 +37,9 @@
     },
     "abort": {
       "already_configured": "This Komora is already configured.",
-      "reauth_successful": "Token updated."
+      "reauth_successful": "Token updated.",
+      "reconfigure_successful": "Saved.",
+      "another_komora": "This is a different Komora — add it as a separate integration."
     }
   },
   "options": {
