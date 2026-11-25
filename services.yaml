@@ -1,0 +1,77 @@
+write_off:
+  fields:
+    item:
+      required: true
+      example: молоко
+      selector:
+        text:
+    qty:
+      required: true
+      example: 0.5
+      selector:
+        number:
+          min: 0
+          max: 100000
+          step: any
+          mode: box
+    unit:
+      example: g
+      selector:
+        text:
+    reason:
+      selector:
+        select:
+          translation_key: reason
+          options: [cooking, used, spoiled, discarded, given, lost, other]
+    note:
+      selector:
+        text:
+    config_entry_id:
+      selector:
+        config_entry:
+          integration: komora
+
+receive:
+  fields:
+    item:
+      required: true
+      example: вода
+      selector:
+        text:
+    qty:
+      example: 2
+      selector:
+        number:
+          min: 0
+          max: 100000
+          step: any
+          mode: box
+    unit:
+      selector:
+        text:
+    config_entry_id:
+      selector:
+        config_entry:
+          integration: komora
+
+add_to_shopping:
+  fields:
+    item:
+      required: true
+      example: хліб
+      selector:
+        text:
+    qty:
+      selector:
+        number:
+          min: 0
+          max: 100000
+          step: any
+          mode: box
+    note:
+      selector:
+        text:
+    config_entry_id:
+      selector:
+        config_entry:
+          integration: komora

@@ -1,0 +1,169 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Connect Komora",
+        "description": "Create a token in Komora: Admin → Tokens, source “Home Assistant (голос)”.",
+        "data": {
+          "url": "URL",
+          "token": "API token"
+        },
+        "data_description": {
+          "url": "https://komora.example.com"
+        }
+      },
+      "reauth_confirm": {
+        "title": "New token",
+        "description": "The token for {url} no longer works. Create a new one in Komora.",
+        "data": {
+          "token": "API token"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Komora is not reachable at this URL.",
+      "invalid_auth": "The token is not valid.",
+      "bad_url": "The URL must start with http:// or https://"
+    },
+    "abort": {
+      "already_configured": "This Komora is already configured.",
+      "reauth_successful": "Token updated."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Komora options",
+        "data": {
+          "panel": "Sidebar panel",
+          "horizon_days": "Shopping horizon",
+          "within_days": "“Eat first”: days left at most"
+        },
+        "data_description": {
+          "panel": "Opens Komora inside Home Assistant; the Komora server needs KOMORA_FRAME_ANCESTORS set to the HA address."
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "shopping": {
+        "name": "Shopping"
+      },
+      "running_out": {
+        "name": "Running out"
+      },
+      "eat_first": {
+        "name": "Eat first"
+      }
+    },
+    "todo": {
+      "shopping_list": {
+        "name": "Shopping list"
+      }
+    }
+  },
+  "selector": {
+    "reason": {
+      "options": {
+        "cooking": "Cooking",
+        "used": "Used",
+        "spoiled": "Spoiled",
+        "discarded": "Discarded",
+        "given": "Given away",
+        "lost": "Lost",
+        "other": "Other"
+      }
+    }
+  },
+  "services": {
+    "write_off": {
+      "name": "Write off",
+      "description": "Record what was used or thrown away. Without a reason, the item's usual one is used.",
+      "fields": {
+        "item": {
+          "name": "Item",
+          "description": "Name or synonym (typos are fine) or item id."
+        },
+        "qty": {
+          "name": "Quantity",
+          "description": "In the item's base unit unless another unit is given."
+        },
+        "unit": {
+          "name": "Unit",
+          "description": "Unit code: g, kg, ml, l, pcs, pack…"
+        },
+        "reason": {
+          "name": "Reason",
+          "description": "Defaults to the item's usual reason."
+        },
+        "note": {
+          "name": "Note",
+          "description": "Free text."
+        },
+        "config_entry_id": {
+          "name": "Komora",
+          "description": "If several are configured."
+        }
+      }
+    },
+    "receive": {
+      "name": "Receive",
+      "description": "Bought or brought in: goes to the usual place; without a quantity, the shopping list suggestion is used.",
+      "fields": {
+        "item": {
+          "name": "Item",
+          "description": "Name or synonym (typos are fine) or item id."
+        },
+        "qty": {
+          "name": "Quantity",
+          "description": "In the item's base unit unless another unit is given."
+        },
+        "unit": {
+          "name": "Unit",
+          "description": "Unit code: g, kg, ml, l, pcs, pack…"
+        },
+        "config_entry_id": {
+          "name": "Komora",
+          "description": "If several are configured."
+        }
+      }
+    },
+    "add_to_shopping": {
+      "name": "Add to shopping",
+      "description": "Mark an item to buy.",
+      "fields": {
+        "item": {
+          "name": "Item",
+          "description": "Name or synonym (typos are fine) or item id."
+        },
+        "qty": {
+          "name": "Quantity",
+          "description": "In the item's base unit unless another unit is given."
+        },
+        "note": {
+          "name": "Note",
+          "description": "Free text."
+        },
+        "config_entry_id": {
+          "name": "Komora",
+          "description": "If several are configured."
+        }
+      }
+    }
+  },
+  "exceptions": {
+    "item_not_found": {
+      "message": "Komora has no item “{item}”."
+    },
+    "api_error": {
+      "message": "Komora: {error}"
+    },
+    "not_loaded": {
+      "message": "Komora is not configured."
+    },
+    "qty_required": {
+      "message": "Quantity is required."
+    }
+  }
+}

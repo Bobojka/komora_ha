@@ -1,0 +1,7 @@
+{
+  "services": {
+    "write_off": { "service": "mdi:basket-minus-outline" },
+    "receive": { "service": "mdi:basket-plus-outline" },
+    "add_to_shopping": { "service": "mdi:cart-plus" }
+  }
+}

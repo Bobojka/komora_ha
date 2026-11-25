@@ -1,0 +1,169 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Підключити Комору",
+        "description": "Токен створи в Коморі: Адміністрування → Токени, джерело «Home Assistant (голос)».",
+        "data": {
+          "url": "Адреса",
+          "token": "Токен API"
+        },
+        "data_description": {
+          "url": "https://komora.example.com"
+        }
+      },
+      "reauth_confirm": {
+        "title": "Новий токен",
+        "description": "Токен для {url} більше не діє. Створи новий у Коморі.",
+        "data": {
+          "token": "Токен API"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Комора не відповідає за цією адресою.",
+      "invalid_auth": "Токен не підходить.",
+      "bad_url": "Адреса має починатися з http:// або https://"
+    },
+    "abort": {
+      "already_configured": "Ця Комора вже підключена.",
+      "reauth_successful": "Токен оновлено."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Параметри Комори",
+        "data": {
+          "panel": "Панель у бічному меню",
+          "horizon_days": "Покупки на скільки днів наперед",
+          "within_days": "«Треба доїсти»: лишилось не більше днів"
+        },
+        "data_description": {
+          "panel": "Комора відкривається всередині Home Assistant; на сервері Комори має бути KOMORA_FRAME_ANCESTORS з адресою HA."
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "shopping": {
+        "name": "Покупки"
+      },
+      "running_out": {
+        "name": "Закінчується"
+      },
+      "eat_first": {
+        "name": "Треба доїсти"
+      }
+    },
+    "todo": {
+      "shopping_list": {
+        "name": "Покупки"
+      }
+    }
+  },
+  "selector": {
+    "reason": {
+      "options": {
+        "cooking": "В їжу",
+        "used": "Використали",
+        "spoiled": "Зіпсувалось",
+        "discarded": "Викинули",
+        "given": "Віддали",
+        "lost": "Загубилось",
+        "other": "Інше"
+      }
+    }
+  },
+  "services": {
+    "write_off": {
+      "name": "Списати",
+      "description": "Що використали чи викинули. Без причини — звична для позиції.",
+      "fields": {
+        "item": {
+          "name": "Позиція",
+          "description": "Назва чи синонім (можна з помилкою) або id позиції."
+        },
+        "qty": {
+          "name": "Кількість",
+          "description": "У базовій одиниці позиції, якщо не вказано іншу."
+        },
+        "unit": {
+          "name": "Одиниця",
+          "description": "Код одиниці: g, kg, ml, l, pcs, пачка…"
+        },
+        "reason": {
+          "name": "Причина",
+          "description": "Без неї — звична для позиції."
+        },
+        "note": {
+          "name": "Примітка",
+          "description": "Довільний текст."
+        },
+        "config_entry_id": {
+          "name": "Комора",
+          "description": "Якщо підключено кілька."
+        }
+      }
+    },
+    "receive": {
+      "name": "Надійшло",
+      "description": "Купили чи принесли: у звичне місце; без кількості — скільки радить список покупок.",
+      "fields": {
+        "item": {
+          "name": "Позиція",
+          "description": "Назва чи синонім (можна з помилкою) або id позиції."
+        },
+        "qty": {
+          "name": "Кількість",
+          "description": "У базовій одиниці позиції, якщо не вказано іншу."
+        },
+        "unit": {
+          "name": "Одиниця",
+          "description": "Код одиниці: g, kg, ml, l, pcs, пачка…"
+        },
+        "config_entry_id": {
+          "name": "Комора",
+          "description": "Якщо підключено кілька."
+        }
+      }
+    },
+    "add_to_shopping": {
+      "name": "Додати до покупок",
+      "description": "Позначити, що треба купити.",
+      "fields": {
+        "item": {
+          "name": "Позиція",
+          "description": "Назва чи синонім (можна з помилкою) або id позиції."
+        },
+        "qty": {
+          "name": "Кількість",
+          "description": "У базовій одиниці позиції, якщо не вказано іншу."
+        },
+        "note": {
+          "name": "Примітка",
+          "description": "Довільний текст."
+        },
+        "config_entry_id": {
+          "name": "Комора",
+          "description": "Якщо підключено кілька."
+        }
+      }
+    }
+  },
+  "exceptions": {
+    "item_not_found": {
+      "message": "У Коморі немає позиції «{item}»."
+    },
+    "api_error": {
+      "message": "Комора: {error}"
+    },
+    "not_loaded": {
+      "message": "Комора не підключена."
+    },
+    "qty_required": {
+      "message": "Вкажи кількість."
+    }
+  }
+}
