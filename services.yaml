@@ -75,3 +75,22 @@ add_to_shopping:
       selector:
         config_entry:
           integration: komora
+
+find:
+  fields:
+    query:
+      required: true
+      example: резистор
+      selector:
+        text:
+    limit:
+      default: 5
+      selector:
+        number:
+          min: 1
+          max: 20
+          mode: box
+    config_entry_id:
+      selector:
+        config_entry:
+          integration: komora

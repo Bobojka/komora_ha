@@ -162,6 +162,24 @@
           "description": "If several are configured."
         }
       }
+    },
+    "find": {
+      "name": "Find",
+      "description": "How much is there: items by name (typos are fine) with stock and place.",
+      "fields": {
+        "query": {
+          "name": "Query",
+          "description": "Name or synonym, typos are fine."
+        },
+        "limit": {
+          "name": "Limit",
+          "description": "At most this many items."
+        },
+        "config_entry_id": {
+          "name": "Komora",
+          "description": "If several are configured."
+        }
+      }
     }
   },
   "exceptions": {

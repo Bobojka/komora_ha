@@ -93,6 +93,15 @@ class KomoraApi:
         found = await self.request("GET", "/items", params={"q": text, "limit": 1})
         return found[0] if found else None
 
+    async def search(self, text: str, limit: int = 5) -> list[dict]:
+        return await self.request("GET", "/items", params={"q": text.strip(), "limit": limit}) or []
+
+    async def item_stock(self, item_id: int) -> list[dict]:
+        return await self.request("GET", f"/items/{item_id}/stock") or []
+
+    async def locations(self) -> list[dict]:
+        return await self.request("GET", "/locations") or []
+
     # --- дії
     async def want(self, item_id: int, qty: float | None = None, note: str | None = None) -> None:
         await self.request("PUT", f"/shopping/{item_id}", json={"qty": qty, "note": note})

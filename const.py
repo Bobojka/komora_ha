@@ -16,6 +16,8 @@ PANEL_PATH = "komora"
 # SSE: які зміни зачіпають те, що показує інтеграція
 REFRESH_TOPICS = {"stock", "items", "shopping", "all"}
 
+ATTR_QUERY = "query"
+ATTR_LIMIT = "limit"
 ATTR_ITEM = "item"
 ATTR_QTY = "qty"
 ATTR_UNIT = "unit"
