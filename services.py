@@ -67,9 +67,20 @@ async def _item(c: KomoraCoordinator, text: str) -> dict:
 
 
 def async_setup_services(hass: HomeAssistant) -> None:
-    async def run(action, call: ServiceCall) -> ServiceResponse:
+    async def run(action, call: ServiceCall, create: bool = False) -> ServiceResponse:
         c = _coordinator(hass, call)
-        item = await _item(c, call.data[ATTR_ITEM])
+        text = call.data[ATTR_ITEM]
+        if create and not text.strip().isdigit():
+            # надійшло / купити: немає такої — Комора створює нову позицію сама
+            try:
+                item = await c.api.ensure(text)
+            except KomoraError as e:
+                raise HomeAssistantError(
+                    translation_domain=DOMAIN, translation_key="api_error",
+                    translation_placeholders={"error": str(e)},
+                ) from e
+        else:
+            item = await _item(c, text)
         try:
             res = await action(c, item, call.data)
         except KomoraError as e:
@@ -78,7 +89,8 @@ def async_setup_services(hass: HomeAssistant) -> None:
                 translation_placeholders={"error": str(e)},
             ) from e
         await c.async_request_refresh()
-        return {"item_id": item["id"], "name": item["name"], **(res or {})}
+        extra = {"created": True, "categories": item.get("categories", [])} if item.get("created") else {}
+        return {"item_id": item["id"], "name": item["name"], **extra, **(res or {})}
 
     async def write_off(c: KomoraCoordinator, item: dict, d: dict):
         if ATTR_QTY not in d:
@@ -95,14 +107,14 @@ def async_setup_services(hass: HomeAssistant) -> None:
     async def add(c: KomoraCoordinator, item: dict, d: dict):
         await c.api.want(item["id"], d.get(ATTR_QTY), d.get(ATTR_NOTE))
 
-    for name, schema, action in (
-        ("write_off", WRITE_OFF, write_off),
-        ("receive", RECEIVE, receive),
-        ("add_to_shopping", ADD, add),
+    for name, schema, action, create in (
+        ("write_off", WRITE_OFF, write_off, False),
+        ("receive", RECEIVE, receive, True),
+        ("add_to_shopping", ADD, add, True),
     ):
         hass.services.async_register(
             DOMAIN, name,
-            partial(run, action),
+            partial(run, action, create=create),
             schema=schema,
             supports_response=SupportsResponse.OPTIONAL,
         )

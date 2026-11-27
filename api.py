@@ -93,6 +93,11 @@ class KomoraApi:
         found = await self.request("GET", "/items", params={"q": text, "limit": 1})
         return found[0] if found else None
 
+    async def ensure(self, text: str) -> dict:
+        """Позиція за назвою, а якщо немає — Комора створює нову (автозаповнення ШІ).
+        {id, name, created, categories}."""
+        return await self.request("POST", "/items/ensure", json={"name": text.strip()})
+
     async def search(self, text: str, limit: int = 5) -> list[dict]:
         return await self.request("GET", "/items", params={"q": text.strip(), "limit": limit}) or []
 

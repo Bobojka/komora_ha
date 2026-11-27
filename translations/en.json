@@ -121,7 +121,7 @@
     },
     "receive": {
       "name": "Receive",
-      "description": "Bought or brought in: goes to the usual place; without a quantity, the shopping list suggestion is used.",
+      "description": "Bought or brought in: goes to the usual place; without a quantity, the shopping list suggestion is used. No such item — Komora creates it (AI autofill).",
       "fields": {
         "item": {
           "name": "Item",
@@ -143,7 +143,7 @@
     },
     "add_to_shopping": {
       "name": "Add to shopping",
-      "description": "Mark an item to buy.",
+      "description": "Mark an item to buy. No such item — Komora creates it (AI autofill).",
       "fields": {
         "item": {
           "name": "Item",
